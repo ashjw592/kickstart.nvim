@@ -268,6 +268,9 @@ require('lazy').setup({
   --            })
   --        end,
   --    }
+  -- Github Copilot
+  { 'github/copilot.vim' },
+
   --
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`.
@@ -600,9 +603,9 @@ require('lazy').setup({
       --  See `:help lsp-config` for information about keys and how to configure
       ---@type table<string, vim.lsp.Config>
       local servers = {
-        -- clangd = {},
+        clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -803,20 +806,27 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    'catppuccin/nvim',
+    name = 'catppuccin',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
+      require('catppuccin').setup {
+        flavour = 'frappe',
+        no_italic = true,
+        integrations = {
+          cmp = true, -- Enable completion integration
+          nvimtree = true, -- Enable nvim-tree integration
+          treesitter = true, -- Enable treesitter integration
         },
       }
 
       -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'catppuccin-frappe'
+      vim.cmd [[highlight Normal guibg=NONE ctermbg=NONE
+        highlight NormalFloat guibg=NONE ctermbg=NONE
+        highlight SignColumn guibg=NONE
+      ]]
     end,
   },
 
