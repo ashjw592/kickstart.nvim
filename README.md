@@ -321,3 +321,12 @@ asdf reshim neovim
 </details>
 
 </details>
+
+# Reminder for me:
+```bash
+git checkout master
+git fetch upstream
+git merge upstream/master
+git push origin master
+```
+for updating the fork
