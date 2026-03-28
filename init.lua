@@ -110,6 +110,9 @@ vim.o.mouse = 'a'
 -- Don't show the mode, since it's already in the status line
 vim.o.showmode = false
 
+-- Use terminal ANSI colors so theme follows terminal palette.
+vim.o.termguicolors = false
+
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -391,11 +394,12 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
+        defaults = {
+          winblend = 0,
         --   mappings = {
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
-        -- },
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = { require('telescope.themes').get_dropdown() },
@@ -458,7 +462,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
+          winblend = 0,
           previewer = false,
         })
       end, { desc = '[/] Fuzzily search in current buffer' })
@@ -613,6 +617,8 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
+
+        jdtls = {}, -- Java Language Server
 
         stylua = {}, -- Used to format Lua code
 
@@ -813,23 +819,19 @@ require('lazy').setup({
     name = 'catppuccin',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('catppuccin').setup {
-        flavour = 'frappe',
-        no_italic = true,
-        integrations = {
-          cmp = true, -- Enable completion integration
-          nvimtree = true, -- Enable nvim-tree integration
-          treesitter = true, -- Enable treesitter integration
-        },
-      }
-
-      -- Load the colorscheme here.
-      vim.cmd.colorscheme 'catppuccin-frappe'
+      vim.cmd.colorscheme 'terminal-native'
+      -- Disable transparency for floating windows
+      vim.o.winblend = 0
+      vim.o.pumblend = 0
       vim.cmd [[highlight Normal guibg=NONE ctermbg=NONE
-        highlight NormalFloat guibg=NONE ctermbg=NONE
-        highlight SignColumn guibg=NONE
+        highlight SignColumn guibg=NONE ctermbg=NONE
       ]]
+      
+      -- Force solid backgrounds for floating windows
+      vim.api.nvim_set_hl(0, 'NormalFloat', { ctermbg = 0, ctermfg = 7 })
+      vim.api.nvim_set_hl(0, 'FloatBorder', { ctermbg = 0, ctermfg = 8 })
+      vim.api.nvim_set_hl(0, 'Pmenu', { ctermbg = 0, ctermfg = 7 })
+      vim.api.nvim_set_hl(0, 'PmenuSel', { ctermbg = 6, ctermfg = 0 })
     end,
   },
 
@@ -899,7 +901,6 @@ require('lazy').setup({
         'javascript',
         'jsdoc',
         'json',
-        'jsonc',
         'lua',
         'luadoc',
         'markdown',
@@ -919,7 +920,7 @@ require('lazy').setup({
       local treesitter = require 'nvim-treesitter'
       treesitter.setup {}
       treesitter.install(parsers)
-      
+
       vim.api.nvim_create_autocmd('FileType', {
         pattern = parsers,
         callback = function(args)
@@ -940,9 +941,7 @@ require('lazy').setup({
 
           -- enables treesitter based indentation
           -- Python's built-in indent logic is generally more reliable for control-flow lines like `return`.
-          if filetype ~= 'python' then
-            vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-          end
+          if filetype ~= 'python' then vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" end
         end,
       })
     end,
@@ -961,7 +960,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommended keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
