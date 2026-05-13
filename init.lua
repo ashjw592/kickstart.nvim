@@ -271,8 +271,71 @@ require('lazy').setup({
   --            })
   --        end,
   --    }
-  -- Github Copilot
-  { 'github/copilot.vim' },
+  -- Github Copilot with Chat
+  {
+    'zbirenbaum/copilot.lua',
+    cmd = 'Copilot',
+    event = 'InsertEnter',
+    config = function()
+      require('copilot').setup {
+        workspace_folders = { vim.fn.getcwd() },
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          keymap = {
+            accept = '<Tab>',
+            accept_word = false,
+            accept_line = false,
+            next = '<M-]>',
+            prev = '<M-[>',
+            dismiss = '<C-]>',
+          },
+        },
+        panel = { enabled = false },
+        filetypes = {
+          yaml = true,
+          markdown = true,
+          help = false,
+          gitcommit = true,
+          gitrebase = false,
+          hgcommit = false,
+          svn = false,
+          cvs = false,
+          ['.'] = false,
+        },
+      }
+    end,
+  },
+  {
+    'CopilotC-Nvim/CopilotChat.nvim',
+    branch = 'canary',
+    dependencies = {
+      { 'zbirenbaum/copilot.lua' },
+      { 'nvim-lua/plenary.nvim' },
+    },
+    opts = {
+      debug = false,
+      window = {
+        layout = 'vertical',
+        width = 0.4,
+      },
+      mappings = {
+        reset = {
+          normal = '<C-r>',
+          insert = '<C-r>',
+        },
+      },
+    },
+    keys = {
+      { '<leader>cc', '<cmd>CopilotChatToggle<cr>', desc = 'Copilot Chat Toggle' },
+      { '<leader>ce', '<cmd>CopilotChatExplain<cr>', desc = 'Copilot Explain', mode = { 'n', 'v' } },
+      { '<leader>cr', '<cmd>CopilotChatReview<cr>', desc = 'Copilot Review', mode = { 'n', 'v' } },
+      { '<leader>cf', '<cmd>CopilotChatFix<cr>', desc = 'Copilot Fix', mode = { 'n', 'v' } },
+      { '<leader>co', '<cmd>CopilotChatOptimize<cr>', desc = 'Copilot Optimize', mode = { 'n', 'v' } },
+      { '<leader>cd', '<cmd>CopilotChatDocs<cr>', desc = 'Copilot Docs', mode = { 'n', 'v' } },
+      { '<leader>ct', '<cmd>CopilotChatTests<cr>', desc = 'Copilot Tests', mode = { 'n', 'v' } },
+    },
+  },
 
   --
   -- Here is a more advanced example where we pass configuration
@@ -396,9 +459,9 @@ require('lazy').setup({
         --
         defaults = {
           winblend = 0,
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
+          --   mappings = {
+          --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          --   },
         },
         -- pickers = {}
         extensions = {
@@ -826,7 +889,7 @@ require('lazy').setup({
       vim.cmd [[highlight Normal guibg=NONE ctermbg=NONE
         highlight SignColumn guibg=NONE ctermbg=NONE
       ]]
-      
+
       -- Force solid backgrounds for floating windows
       vim.api.nvim_set_hl(0, 'NormalFloat', { ctermbg = 0, ctermfg = 7 })
       vim.api.nvim_set_hl(0, 'FloatBorder', { ctermbg = 0, ctermfg = 8 })
@@ -961,6 +1024,9 @@ require('lazy').setup({
   -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
+  -- Toggle Neotree with <leader>e
+  vim.keymap.set('n', '<leader>e', '<cmd>Neotree toggle<cr>', { desc = 'Toggle Neotree' }),
+
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommended keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
