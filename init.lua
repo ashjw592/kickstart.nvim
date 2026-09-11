@@ -171,9 +171,9 @@ do
   -- instead raise a dialog asking if you wish to save the current file(s)
   -- See `:help 'confirm'`
   vim.o.confirm = true
+
 end
 
-require 'custom.options'
 -- ============================================================
 -- SECTION 2: KEYMAPS & AUTOCMDS
 -- basic keymaps, basic autocmds
@@ -254,7 +254,6 @@ do
   })
 end
 
-require 'custom.keymaps'
 -- ============================================================
 -- SECTION 3: PLUGIN MANAGER INTRO
 -- vim.pack intro, build hooks
@@ -1035,6 +1034,8 @@ do
   -- require 'custom.plugins.colorscheme'
   -- require 'custom.plugins.ui'
   -- require 'custom.plugins.git'
+  require 'custom.options'
+  require 'custom.keymaps'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
