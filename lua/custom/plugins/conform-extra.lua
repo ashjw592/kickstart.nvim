@@ -10,6 +10,7 @@ require('conform').setup {
       typescriptreact = true,
       rust = true,
       go = true,
+      cpp = true,
     }
     if enabled_filetypes[vim.bo[bufnr].filetype] then
       return { timeout_ms = 500 }

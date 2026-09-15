@@ -11,6 +11,7 @@ local servers = {
   cssls = {},
   jsonls = {},
   bashls = {},
+  clangd = {},
 }
 
 -- Make sure mason/mason-lspconfig/nvim-lspconfig are available
