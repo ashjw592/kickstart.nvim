@@ -58,3 +58,16 @@ vim.o.winblend = 0
 vim.o.pumblend = 0
 
 -- END COLORSCHEME
+
+-- c/cpp indentation
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'c', 'cpp' },
+  group = vim.api.nvim_create_augroup('custom-cpp-indent', { clear = true }),
+  callback = function()
+    vim.bo.shiftwidth = 2
+    vim.bo.tabstop = 2
+    vim.bo.softtabstop = 2
+    vim.bo.expandtab = true -- use spaces, not literal tabs
+  end,
+})
