@@ -6,7 +6,6 @@ local servers = {
   pyright = {},
   ts_ls = {}, -- TypeScript / JavaScript
   rust_analyzer = {},
-  gopls = {},
   html = {},
   cssls = {},
   jsonls = {},
