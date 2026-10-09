@@ -2,9 +2,18 @@
 -- server names, which also correspond to mason-lspconfig package names.
 -- See :help lspconfig-all for the full list of supported servers.
 ---@type table<string, vim.lsp.Config>
+-- Vue's TS plugin lives inside the mason-installed vue-language-server package
+local vue_language_server_path = vim.fn.stdpath 'data' .. '/mason/packages/vue-language-server/node_modules/@vue/language-server'
+
+local vue_plugin = {
+  name = '@vue/typescript-plugin',
+  location = vue_language_server_path,
+  languages = { 'vue' },
+  configNamespace = 'typescript',
+}
+
 local servers = {
   pyright = {},
-  ts_ls = {}, -- TypeScript / JavaScript
   rust_analyzer = {},
   html = {},
   cssls = {},
@@ -12,6 +21,19 @@ local servers = {
   bashls = {},
   clangd = {},
   millet = {},
+
+  -- TS/JS + Vue (hybrid mode)
+  vtsls = {
+    filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+    settings = {
+      vtsls = {
+        tsserver = {
+          globalPlugins = { vue_plugin },
+        },
+      },
+    },
+  },
+  vue_ls = {}, -- defaults are correct, don't override filetypes
 }
 
 -- Make sure mason/mason-lspconfig/nvim-lspconfig are available
