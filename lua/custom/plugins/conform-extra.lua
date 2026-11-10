@@ -1,46 +1,37 @@
+-- Formatters per filetype. Every filetype listed here is also formatted on save.
+-- Filetypes mapped to `{}` have no external formatter and use the LSP formatter instead.
+local prettier = { 'prettierd', 'prettier', stop_after_first = true }
+
+local formatters_by_ft = {
+  lua = { 'stylua' },
+  python = { 'isort', 'black' },
+  rust = { 'rustfmt' },
+  go = { 'gofumpt', 'goimports' },
+  cpp = {},
+
+  -- web (all prettier, so they share one style)
+  javascript = prettier,
+  typescript = prettier,
+  javascriptreact = prettier,
+  typescriptreact = prettier,
+  vue = prettier,
+  html = prettier,
+  css = prettier,
+  scss = prettier,
+  less = prettier,
+  json = prettier,
+  jsonc = prettier,
+  yaml = prettier,
+  markdown = prettier,
+}
+
 require('conform').setup {
   notify_on_error = false,
+  formatters_by_ft = formatters_by_ft,
   format_on_save = function(bufnr)
-    local enabled_filetypes = {
-      lua = true,
-      python = true,
-      javascript = true,
-      typescript = true,
-      javascriptreact = true,
-      typescriptreact = true,
-      rust = true,
-      go = true,
-      cpp = true,
-      vue = true,
-      json = true,
-    }
-    if enabled_filetypes[vim.bo[bufnr].filetype] then
-      return { timeout_ms = 500 }
-    else
-      return nil
-    end
+    if formatters_by_ft[vim.bo[bufnr].filetype] then return { timeout_ms = 500 } end
   end,
   default_format_opts = {
     lsp_format = 'fallback',
   },
 }
-
-local formatter_map = {
-  lua = { 'stylua' },
-  python = { 'isort', 'black' },
-  javascript = { 'prettierd', 'prettier', stop_after_first = true },
-  typescript = { 'prettierd', 'prettier', stop_after_first = true },
-  javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
-  typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
-  rust = { 'rustfmt' },
-  go = { 'gofumpt', 'goimports' },
-}
-
-vim.api.nvim_create_autocmd('FileType', {
-  group = vim.api.nvim_create_augroup('custom-conform-formatters', { clear = true }),
-  callback = function(args)
-    local ft = vim.bo[args.buf].filetype
-    local formatters = formatter_map[ft]
-    if formatters then require('conform').formatters_by_ft[ft] = formatters end
-  end,
-})

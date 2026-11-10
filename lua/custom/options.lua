@@ -62,7 +62,11 @@ vim.o.pumblend = 0
 -- c/cpp indentation
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'c', 'cpp', 'js', 'ts', 'jsx', 'javascript', 'typescript' },
+  pattern = {
+    'c', 'cpp',
+    'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'vue',
+    'html', 'css', 'scss', 'less', 'json', 'jsonc', 'yaml', 'markdown',
+  },
   group = vim.api.nvim_create_augroup('custom-cpp-indent', { clear = true }),
   callback = function()
     vim.bo.shiftwidth = 2
