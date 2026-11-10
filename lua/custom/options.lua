@@ -59,7 +59,7 @@ vim.o.pumblend = 0
 
 -- END COLORSCHEME
 
--- c/cpp indentation
+-- 2-space indentation
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {
@@ -67,7 +67,7 @@ vim.api.nvim_create_autocmd('FileType', {
     'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'vue',
     'html', 'css', 'scss', 'less', 'json', 'jsonc', 'yaml', 'markdown',
   },
-  group = vim.api.nvim_create_augroup('custom-cpp-indent', { clear = true }),
+  group = vim.api.nvim_create_augroup('custom-2space-indent', { clear = true }),
   callback = function()
     vim.bo.shiftwidth = 2
     vim.bo.tabstop = 2

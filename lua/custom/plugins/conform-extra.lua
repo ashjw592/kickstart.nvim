@@ -11,7 +11,7 @@ local formatters_by_ft = {
   c = {},
   cpp = {},
   sh = { 'shfmt' },
-  bash = { 'shfmt' },
+  bash = { 'shfmt' }, -- style comes from .editorconfig (see ~/.editorconfig)
 
   -- web (all prettier, so they share one style)
   javascript = prettier,
@@ -30,14 +30,12 @@ local formatters_by_ft = {
 }
 
 require('conform').setup {
-  notify_on_error = false,
+  notify_on_error = true, -- surface timeouts/errors instead of silently saving unformatted
   formatters_by_ft = formatters_by_ft,
-  formatters = {
-    shfmt = { prepend_args = { '-i', '2' } }, -- 2-space indent, matching everything else
-  },
   format_on_save = function(bufnr)
     if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then return end
-    if formatters_by_ft[vim.bo[bufnr].filetype] then return { timeout_ms = 500 } end
+    -- 1000ms leaves room for prettierd's first-run startup
+    if formatters_by_ft[vim.bo[bufnr].filetype] then return { timeout_ms = 1000 } end
   end,
   default_format_opts = {
     lsp_format = 'fallback',

@@ -34,6 +34,14 @@ local servers = {
     },
   },
   vue_ls = {}, -- defaults are correct, don't override filetypes
+
+  -- Linters (run as language servers, so diagnostics show inline)
+  ruff = {
+    -- let pyright handle hover docs; ruff only provides lint diagnostics
+    on_attach = function(client) client.server_capabilities.hoverProvider = false end,
+  },
+  eslint = {}, -- only starts in projects with an eslint config
+  stylelint_lsp = {}, -- only starts in projects with a stylelint config
 }
 
 -- Make sure mason/mason-lspconfig/nvim-lspconfig are available
@@ -48,7 +56,7 @@ vim.pack.add {
 -- Extend Mason's ensure_installed list with our servers too
 -- Formatters used by conform (see conform-extra.lua), installed alongside the servers
 -- add 'gofumpt' and 'goimports' here once Go is installed (Mason builds them with `go`)
-local formatters = { 'stylua', 'ruff', 'prettierd', 'shfmt' }
+local formatters = { 'stylua', 'prettierd', 'shfmt' } -- ruff is installed as a server above
 
 require('mason-tool-installer').setup {
   ensure_installed = vim.list_extend(vim.tbl_keys(servers), formatters),
