@@ -63,7 +63,7 @@ vim.o.pumblend = 0
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {
-    'c', 'cpp',
+    'c', 'cpp', 'sh', 'bash',
     'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'vue',
     'html', 'css', 'scss', 'less', 'json', 'jsonc', 'yaml', 'markdown',
   },

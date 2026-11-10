@@ -46,8 +46,12 @@ vim.pack.add {
 }
 
 -- Extend Mason's ensure_installed list with our servers too
+-- Formatters used by conform (see conform-extra.lua), installed alongside the servers
+-- add 'gofumpt' and 'goimports' here once Go is installed (Mason builds them with `go`)
+local formatters = { 'stylua', 'ruff', 'prettierd', 'shfmt' }
+
 require('mason-tool-installer').setup {
-  ensure_installed = vim.tbl_keys(servers),
+  ensure_installed = vim.list_extend(vim.tbl_keys(servers), formatters),
 }
 
 for name, server in pairs(servers) do
