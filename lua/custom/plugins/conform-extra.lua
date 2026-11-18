@@ -10,6 +10,8 @@ local formatters_by_ft = {
   go = { 'gofumpt', 'goimports' },
   c = {},
   cpp = {},
+  scala = {}, -- metals runs scalafmt (uses the project's .scalafmt.conf)
+  sbt = {},
   sh = { 'shfmt' },
   bash = { 'shfmt' }, -- style comes from .editorconfig (see ~/.editorconfig)
 

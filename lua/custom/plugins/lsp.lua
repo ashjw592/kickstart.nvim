@@ -62,7 +62,16 @@ require('mason-tool-installer').setup {
   ensure_installed = vim.list_extend(vim.tbl_keys(servers), formatters),
 }
 
-for name, server in pairs(servers) do
+-- Servers Mason can't install. They need to be on your PATH already.
+local external_servers = {
+  -- Scala: install with coursier (`cs install metals`); also handles scalafmt formatting
+  metals = {
+    filetypes = { 'scala', 'sbt' },
+    root_markers = { 'build.sbt', 'build.sc', 'build.mill', '.scala-build', { 'build.gradle', 'build.gradle.kts' }, 'pom.xml' },
+  },
+}
+
+for name, server in pairs(vim.tbl_extend('error', servers, external_servers)) do
   vim.lsp.config(name, server)
   vim.lsp.enable(name)
 end
