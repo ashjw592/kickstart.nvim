@@ -67,7 +67,17 @@ local external_servers = {
   -- Scala: install with coursier (`cs install metals`); also handles scalafmt formatting
   metals = {
     filetypes = { 'scala', 'sbt' },
-    root_markers = { 'build.sbt', 'build.sc', 'build.mill', '.scala-build', { 'build.gradle', 'build.gradle.kts' }, 'pom.xml' },
+    -- build-tool markers first; fall back to .scalafmt.conf / .git so plain scala-cli
+    -- projects (no build file) still get a root and Metals can find .scalafmt.conf
+    root_markers = { 'build.sbt', 'build.sc', 'build.mill', 'project.scala', '.scala-build', { 'build.gradle', 'build.gradle.kts' }, 'pom.xml', '.scalafmt.conf', '.git' },
+    -- Metals 1.6.9 throws UnsupportedOperationException ("Unexpected error initializing
+    -- server" popup) when it tries these refresh requests, so don't advertise them
+    capabilities = {
+      workspace = {
+        codeLens = { refreshSupport = false },
+        semanticTokens = { refreshSupport = false },
+      },
+    },
   },
 }
 
